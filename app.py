@@ -10,7 +10,8 @@ API_KEY = os.getenv("AI_API_KEY")
 def minta_ai_buat_konten(prompt_permintaan):
     """Agen 1: Pembuat Konten Iklan / Produk"""
     payload = {
-        "model": "llama3-8b-8192",
+        "model": "llama-3.1-8b-instant",
+
         "messages": [
             {
                 "role": "system", 
