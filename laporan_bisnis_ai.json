@@ -1,33 +1,13 @@
 {
-    "tanggal_eksekusi": "2026-06-03 20:13:23",
+    "tanggal_eksekusi": "2026-06-03 20:19:10",
     "input_user": "Rekomendasi Sepatu Sneakers Lokal Keren Murah",
-    "hasil_akhir_ai": "Error Agen 1: 'choices'",
-    "total_revisi": 5,
+    "hasil_akhir_ai": "Error Struktur JSON Agen 1: {\"error\": {\"message\": \"The model `llama3-8b-8192` has been decommissioned and is no longer supported. Please refer to https://console.groq.com/docs/deprecations for a recommendation on which model to use instead.\", \"type\": \"invalid_request_error\", \"code\": \"model_decommissioned\"}}",
+    "total_revisi": 0,
     "catatan_koreksi": [
         {
             "percobaan_ke": 1,
-            "kesalahan": "Error Agen 2: 'choices'",
-            "konten_salah": "Error Agen 1: 'choices'"
-        },
-        {
-            "percobaan_ke": 2,
-            "kesalahan": "Error Agen 2: 'choices'",
-            "konten_salah": "Error Agen 1: 'choices'"
-        },
-        {
-            "percobaan_ke": 3,
-            "kesalahan": "Error Agen 2: 'choices'",
-            "konten_salah": "Error Agen 1: 'choices'"
-        },
-        {
-            "percobaan_ke": 4,
-            "kesalahan": "Error Agen 2: 'choices'",
-            "konten_salah": "Error Agen 1: 'choices'"
-        },
-        {
-            "percobaan_ke": 5,
-            "kesalahan": "Error Agen 2: 'choices'",
-            "konten_salah": "Error Agen 1: 'choices'"
+            "kesalahan": "API Groq menolak permintaan",
+            "konten_salah": "Error Struktur JSON Agen 1: {\"error\": {\"message\": \"The model `llama3-8b-8192` has been decommissioned and is no longer supported. Please refer to https://console.groq.com/docs/deprecations for a recommendation on which model to use instead.\", \"type\": \"invalid_request_error\", \"code\": \"model_decommissioned\"}}"
         }
     ]
 }
