@@ -10,8 +10,7 @@ API_KEY = os.getenv("AI_API_KEY")
 def minta_ai_buat_konten(prompt_permintaan):
     """Agen 1: Pembuat Konten Iklan / Produk"""
     payload = {
-        "model": "llama-3.1-8b-instant",
-
+        "model": "llama-3.1-8b-instant",  # <--- Sudah Update & Aktif
         "messages": [
             {
                 "role": "system", 
@@ -24,7 +23,6 @@ def minta_ai_buat_konten(prompt_permintaan):
     try:
         response = requests.post(API_URL, json=payload, headers=headers)
         data = response.json()
-        # Perbaikan proteksi jika struktur json tidak sesuai
         if 'choices' in data:
             return data['choices'][0]['message']['content']
         else:
@@ -39,7 +37,7 @@ def minta_ai_periksa_konten(hasil_konten):
         return f"Gagal mengecek karena Agen 1 bermasalah: {hasil_konten}"
 
     payload = {
-        "model": "llama3-8b-8192",
+        "model": "llama-3.1-8b-instant",  # <--- SEKARANG SUDAH SAMA DENGAN AGEN 1 (FIXED)
         "messages": [
             {
                 "role": "system", 
@@ -105,4 +103,3 @@ def jalankan_sistem_otonom(kata_kunci):
 
 if __name__ == "__main__":
     jalankan_sistem_otonom("Rekomendasi Sepatu Sneakers Lokal Keren Murah")
-    
