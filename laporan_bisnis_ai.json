@@ -1,33 +1,7 @@
 {
-    "tanggal_eksekusi": "2026-06-03 20:25:03",
+    "tanggal_eksekusi": "2026-06-03 20:30:35",
     "input_user": "Rekomendasi Sepatu Sneakers Lokal Keren Murah",
-    "hasil_akhir_ai": "Maaf atas kesalahan sebelumnya! Berikut perbaikan caption seperti yang diinstruksikan:\n\n\"Cari keaslian lokal di setiap langkah! Kapsul Marvic menawarkan desain unik, nyaman, dan harga terjangkau. Pilih sneakers keren dari kami! #SepatuLokal #DesainLokal #SneakersIndonesiaTerbaik\"",
-    "total_revisi": 5,
-    "catatan_koreksi": [
-        {
-            "percobaan_ke": 1,
-            "kesalahan": "Error Struktur JSON Agen 2: {\"error\": {\"message\": \"The model `llama3-8b-8192` has been decommissioned and is no longer supported. Please refer to https://console.groq.com/docs/deprecations for a recommendation on which model to use instead.\", \"type\": \"invalid_request_error\", \"code\": \"model_decommissioned\"}}",
-            "konten_salah": "Cari sepatu sneaker lokal? Coba Kapsul oleh Marvic, dengan desain keren dan harga murah! Rancangan lokal untuk semuanya. #SneakersLokal #KapsulMarvic #Hargamurah"
-        },
-        {
-            "percobaan_ke": 2,
-            "kesalahan": "Error Struktur JSON Agen 2: {\"error\": {\"message\": \"The model `llama3-8b-8192` has been decommissioned and is no longer supported. Please refer to https://console.groq.com/docs/deprecations for a recommendation on which model to use instead.\", \"type\": \"invalid_request_error\", \"code\": \"model_decommissioned\"}}",
-            "konten_salah": "Maaf atas kesalahan sebelumnya! Berikut adalah caption yang telah diperbaiki:\n\n\"Kasihkan sepatumu dengan desain lokal dan harga yang murah! Coba Kapsul Marvic, sepatu sneaker lokal yang keren dan berkualitas. #SneakersLokal #KapsulMarvic #SepatuLokal\""
-        },
-        {
-            "percobaan_ke": 3,
-            "kesalahan": "Error Struktur JSON Agen 2: {\"error\": {\"message\": \"The model `llama3-8b-8192` has been decommissioned and is no longer supported. Please refer to https://console.groq.com/docs/deprecations for a recommendation on which model to use instead.\", \"type\": \"invalid_request_error\", \"code\": \"model_decommissioned\"}}",
-            "konten_salah": "Maaf atas kesalahan sebelumnya! Berikut adalah caption yang telah diperbaiki:\n\n\"Siapa sih yang tidak cinta sneakers keren? Kasihkan sepatumu dengan desain lokal dan harga yang murah, seperti Kapsul Marvic! #SepatuLokal #SneakersLokal #DesainLokalIndo\""
-        },
-        {
-            "percobaan_ke": 4,
-            "kesalahan": "Error Struktur JSON Agen 2: {\"error\": {\"message\": \"The model `llama3-8b-8192` has been decommissioned and is no longer supported. Please refer to https://console.groq.com/docs/deprecations for a recommendation on which model to use instead.\", \"type\": \"invalid_request_error\", \"code\": \"model_decommissioned\"}}",
-            "konten_salah": "Maaf atas kesalahan sebelumnya!\n\n\"Siapa sih yang tidak cinta sneakers keren? Kasihkan sepatumu dengan desain lokal dan harga yang murah, seperti Kapsul Marvic! Nikmati keunggulan desain lokal dan harga kompetitif. Pilih Kapsul Marvic untuk sepatu yang unik dan nyaman! #SepatuLokal #SneakersLokalIndonesia #DesainLokalTerbaik\""
-        },
-        {
-            "percobaan_ke": 5,
-            "kesalahan": "Error Struktur JSON Agen 2: {\"error\": {\"message\": \"The model `llama3-8b-8192` has been decommissioned and is no longer supported. Please refer to https://console.groq.com/docs/deprecations for a recommendation on which model to use instead.\", \"type\": \"invalid_request_error\", \"code\": \"model_decommissioned\"}}",
-            "konten_salah": "Maaf atas kesalahan sebelumnya! Berikut perbaikan caption:\n\n\"Siapa sih yang tidak suka sneakers keren? Nikmati keunggulan desain lokal dan harga kompetitif hanya di Kapsul Marvic! Pilih sepatu unik dan nyaman, dengan harga murah. #SepatuLokal #SneakersLokalIndonesia #DesainKreatifLokal\""
-        }
-    ]
+    "hasil_akhir_ai": "Cari keaslian di sepatu lokal dengan kualitas maksimal! PT Fajar Budi Jaya - sepatu sneakers lokal yang menawarkan kualitas terbaik dengan harga yang lebih terjangkau #SepatuLokal #SneakersMurah #KualitasTinggi",
+    "total_revisi": 0,
+    "catatan_koreksi": []
 }
