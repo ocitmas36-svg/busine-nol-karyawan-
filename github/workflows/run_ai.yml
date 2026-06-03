@@ -1,0 +1,30 @@
+name: Jalankan Bisnis AI Otonom Rosit
+
+on:
+  # Mengizinkan kamu untuk memicu robot ini bekerja secara manual lewat HP
+  workflow_dispatch:
+  # ATAU Robot ini akan otomatis berjalan sendiri setiap hari jam 12 malam
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  run-ai-system:
+    runs-down: ubuntu-latest
+    steps:
+    - name: Ambil Kode dari Repositori
+      uses: actions/checkout@v4
+
+    - name: Siapkan Python di Server GitHub
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Instal Bahan (Dependencies)
+      run: |
+        pip install -r requirements.txt
+
+    - name: Jalankan AI Koreksi Diri
+      env:
+        AI_API_KEY: ${{ secrets.AI_API_KEY }}
+      run: |
+        python app.py
