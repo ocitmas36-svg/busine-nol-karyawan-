@@ -1,15 +1,13 @@
 name: Jalankan Bisnis AI Otonom Rosit
 
 on:
-  # Mengizinkan kamu untuk memicu robot ini bekerja secara manual lewat HP
-  workflow_dispatch:
-  # ATAU Robot ini akan otomatis berjalan sendiri setiap hari jam 12 malam
+  workflow_dispatch: # Tombol manual di HP
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 0 * * *' # Otomatis jalan sendiri setiap jam 12 malam
 
 jobs:
   run-ai-system:
-    runs-down: ubuntu-latest
+    runs-on: ubuntu-latest # <--- Sudah diperbaiki dari runs-down
     steps:
     - name: Ambil Kode dari Repositori
       uses: actions/checkout@v4
@@ -28,3 +26,12 @@ jobs:
         AI_API_KEY: ${{ secrets.AI_API_KEY }}
       run: |
         python app.py
+
+    - name: Simpan Otomatis Hasil Kerja AI ke GitHub
+      run: |
+        git config --global user.name "Rosit Otonom Bot"
+        git config --global user.email "bot@github.com"
+        git add laporan_bisnis_ai.json
+        git commit -m "Update otomatis hasil kerja & koreksi diri AI [Skip CI]" || exit 0
+        git push
+        
