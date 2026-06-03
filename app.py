@@ -1,105 +1,140 @@
 import os
 import json
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 
-# Menggunakan Groq API (Gratis & Super Cepat)
+# Konfigurasi API Groq
 API_URL = "https://api.groq.com/openai/v1/chat/completions"
 API_KEY = os.getenv("AI_API_KEY")
 
-def minta_ai_buat_konten(prompt_permintaan):
-    """Agen 1: Pembuat Konten Iklan / Produk"""
+# =====================================================================
+# SIMULASI DATABASE KLIEN UMKM (Nanti data ini diisi dari Web Pendaftaran)
+# =====================================================================
+DB_KLIEN = {
+    "081234567890": {
+        "nama_pemilik": "Andi Sepatu",
+        "nomor_target_bot": "081234567890",
+        "tanggal_daftar": "2026-06-01",  # Contoh daftar 3 hari lalu
+        "durasi_trial_hari": 5,
+        "status_pembayaran": "Trial",    # Pilihan: Trial / Aktif / Jatuh Tempo
+        "sop_perusahaan": """
+        Nama Toko: Rosit Sneakers Store.
+        Produk: Sepatu sneakers lokal berkualitas, harga kisaran Rp150.000 - Rp300.000.
+        SOP Balasan: Ramah, santun, gunakan panggilan 'Kakak'. 
+        Aturan Penting: Jika stok ditanya, jawab 'Semua produk ready stock siap kirim hari ini!'. 
+        Jangan berikan diskon tambahan kecuali pembeli mengambil minimal 3 pasang.
+        """
+    },
+    "089999999999": {
+        "nama_pemilik": "Budi Coffee",
+        "nomor_target_bot": "089999999999",
+        "tanggal_daftar": "2026-05-20",  # Contoh daftar 15 hari lalu (Sudah Lewat 5 Hari)
+        "durasi_trial_hari": 5,
+        "status_pembayaran": "Trial",    # Statusnya masih Trial, harusnya nanti ke-detek Jatuh Tempo
+        "sop_perusahaan": "Toko Kopi Buka jam 08.00 - 22.00."
+    }
+}
+
+def hitung_status_akses(data_klien):
+    """Fungsi melacak sisa hari trial dan mendeteksi jatuh tempo secara otomatis"""
+    tgl_daftar = datetime.strptime(data_klien["tanggal_daftar"], "%Y-%m-%d")
+    tgl_kadaluwarsa_trial = tgl_daftar + timedelta(days=data_klien["durasi_trial_hari"])
+    tgl_sekarang = datetime.now()
+
+    # Jika pemilik sudah bayar, langsung loloskan jadi Aktif
+    if data_klien["status_pembayaran"].lower() == "aktif":
+        return "AKTIF", 0
+
+    # Jika masih trial, cek apakah waktunya masih ada atau sudah habis
+    if tgl_sekarang <= tgl_kadaluwarsa_trial:
+        sisa_hari = (tgl_kadaluwarsa_trial - tgl_sekarang).days + 1
+        return "TRIAL", sisa_hari
+    else:
+        return "JATUH TEMPO", 0
+
+def ai_agen_cs_balas(pesan_pelanggan, sop_toko):
+    """Agen 1: CS AI yang membalas chat berdasarkan SOP Toko Klien"""
     payload = {
-        "model": "llama-3.1-8b-instant",  # <--- Sudah Update & Aktif
+        "model": "llama-3.1-8b-instant",
         "messages": [
             {
                 "role": "system", 
-                "content": "Kamu adalah copywriter profesional. Buat caption pendek maksimal 30 kata dan WAJIB sertakan minimal 3 hashtag."
+                "content": f"Kamu adalah Customer Service otomatis yang cerdas dan ramah. Kamu WAJIB menjawab pertanyaan pelanggan HANYA berdasarkan SOP Perusahaan berikut ini: {sop_toko}. Jangan mengada-ada informasi di luar SOP."
             },
-            {"role": "user", "content": prompt_permintaan}
+            {"role": "user", "content": pesan_pelanggan}
         ]
     }
     headers = {"Authorization": f"Bearer {API_KEY}", "Content-Type": "application/json"}
     try:
-        response = requests.post(API_URL, json=payload, headers=headers)
-        data = response.json()
-        if 'choices' in data:
-            return data['choices'][0]['message']['content']
-        else:
-            return f"Error Struktur JSON Agen 1: {json.dumps(data)}"
+        response = requests.post(API_URL, json=payload, headers=headers).json()
+        return response['choices'][0]['message']['content']
     except Exception as e:
-        return f"Error Koneksi Agen 1: {str(e)}"
+        return f"Error Agen CS: {str(e)}"
 
-def minta_ai_periksa_konten(hasil_konten):
-    """Agen 2: Pemeriksa Kesalahan & Koreksi Otomatis (Evaluator)"""
-    # Jika Agen 1 memberikan teks eror, langsung gagalkan agar tidak loop sia-sia
-    if "Error" in hasil_konten:
-        return f"Gagal mengecek karena Agen 1 bermasalah: {hasil_konten}"
-
+def ai_agen_qc_periksa(jawaban_cs, sop_toko):
+    """Agen 2: QC Officer yang memastikan jawaban CS tidak melanggar SOP"""
     payload = {
-        "model": "llama-3.1-8b-instant",  # <--- SEKARANG SUDAH SAMA DENGAN AGEN 1 (FIXED)
+        "model": "llama-3.1-8b-instant",
         "messages": [
             {
                 "role": "system", 
-                "content": "Kamu adalah QC Officer. Periksa teks berikut. Apakah panjangnya melebihi 30 kata? Apakah ada minimal 3 hashtag? Jawab HANYA dengan kata 'LOLOS' jika sempurna, atau berikan instruksi perbaikan spesifik jika salah."
+                "content": f"Kamu adalah Quality Control untuk chat CS. Periksa apakah jawaban CS ini sudah ramah, akurat, dan sesuai dengan SOP Toko ini: {sop_toko}. Jika sudah bagus dan layak kirim ke WhatsApp pelanggan, jawab HANYA dengan kata 'LOLOS'. Jika buruk atau melanggar SOP, berikan revisi teks perbaikannya."
             },
-            {"role": "user", "content": hasil_konten}
+            {"role": "user", "content": jawaban_cs}
         ]
     }
     headers = {"Authorization": f"Bearer {API_KEY}", "Content-Type": "application/json"}
     try:
-        response = requests.post(API_URL, json=payload, headers=headers)
-        data = response.json()
-        if 'choices' in data:
-            return data['choices'][0]['message']['content']
-        else:
-            return f"Error Struktur JSON Agen 2: {json.dumps(data)}"
+        response = requests.post(API_URL, json=payload, headers=headers).json()
+        return response['choices'][0]['message']['content']
     except Exception as e:
-        return f"Error Koneksi Agen 2: {str(e)}"
+        return f"Error Agen QC: {str(e)}"
 
-def jalankan_sistem_otonom(kata_kunci):
-    print(f"🚀 Memulai pencarian produk otomatis untuk: {kata_kunci}")
+def proses_chat_masuk(nomor_toko, chat_pelanggan):
+    print(f"\n📥 Ada chat masuk ke nomor Bot: {nomor_toko}")
     
-    percobaan = 0
-    maksimal_koreksi = 5
-    konten_sekarang = minta_ai_buat_konten(kata_kunci)
-    riwayat_koreksi = []
+    # 1. Cek apakah nomor toko tersebut terdaftar di sistem kita
+    if nomor_toko not in DB_KLIEN:
+        return "Nomor Anda belum terdaftar di sistem SaaS Rosit AI."
 
-    while percobaan < maksimal_koreksi:
-        # Jika ada eror sistem di awal, langsung hentikan agar hemat kuota API
-        if "Error Struktur" in konten_sekarang:
-            riwayat_koreksi.append({"percobaan_ke": percobaan + 1, "kesalahan": "API Groq menolak permintaan", "konten_salah": konten_sekarang})
-            break
+    klien = DB_KLIEN[nomor_toko]
+    
+    # 2. Cek status uji coba / jatuh tempo pembayaran klien
+    status_akses, sisa_waktu = hitung_status_akses(klien)
+    
+    if status_akses == "JATUH TEMPO":
+        print(f"❌ SISTEM MOGOK: Nomor {nomor_toko} sudah Jatuh Tempo! Mengirim instruksi tagihan manual.")
+        return f"[MOGOK SISTEM] Masa trial 5 hari sudah habis. Silakan hubungi WA Rosit Admin 1 untuk perpanjangan."
 
-        hasil_pemeriksaan = minta_ai_periksa_konten(konten_sekarang)
-        
-        if "LOLOS" in hasil_pemeriksaan.upper():
-            print(f"✨ SUKSES! Sistem berhasil lolos QC pada percobaan ke-{percobaan+1}")
+    print(f"🟢 Akses Valid: Status [{status_akses}] | Sisa Masa Trial: {sisa_waktu} Hari.")
+
+    # 3. Jalankan Debat AI untuk membalas chat pelanggan secara otonom
+    jawaban_sekarang = ai_agen_cs_balas(chat_pelanggan, klien["sop_perusahaan"])
+    
+    # Proses koreksi diri maksimal 3 kali jika QC menolak
+    for i in range(3):
+        hasil_qc = ai_agen_qc_periksa(jawaban_sekarang, klien["sop_perusahaan"])
+        if "LOLOS" in hasil_qc.upper():
+            print(f"✨ Jawaban lolos QC pada pengecekan ke-{i+1}")
             break
         else:
-            print(f"⚠️ Koreksi Otomatis ke-{percobaan+1}: {hasil_pemeriksaan}")
-            riwayat_koreksi.append({
-                "percobaan_ke": percobaan + 1,
-                "kesalahan": hasil_pemeriksaan,
-                "konten_salah": konten_sekarang
-            })
-            
-            prompt_revisi = f"Hasil kerjamu sebelumnya salah: '{konten_sekarang}'. Perbaiki total berdasarkan instruksi ini: {hasil_pemeriksaan}"
-            konten_sekarang = minta_ai_buat_konten(prompt_revisi)
-            percobaan += 1
+            print(f"⚠️ QC merevisi jawaban CS ke-{i+1}")
+            jawaban_sekarang = hasil_qc # Menggunakan teks perbaikan dari QC
 
-    laporan_bisnis = {
-        "tanggal_eksekusi": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "input_user": kata_kunci,
-        "hasil_akhir_ai": konten_sekarang,
-        "total_revisi": percobaan,
-        "catatan_koreksi": riwayat_koreksi
-    }
-
-    with open("laporan_bisnis_ai.json", "w", encoding="utf-8") as f:
-        json.dump(laporan_bisnis, f, indent=4, ensure_ascii=False)
-        
-    print("📁 Laporan bisnis berhasil disimpan ke laporan_bisnis_ai.json")
+    return jawaban_sekarang
 
 if __name__ == "__main__":
-    jalankan_sistem_otonom("Rekomendasi Sepatu Sneakers Lokal Keren Murah")
+    print("=== SIMULASI TESTING SISTEM SAAS BOT WA ROSIT AI ===")
+    
+    # TEST CASE 1: Menguji Toko Andi Sepatu (Masih masa Trial hari ke-3 dari 5 hari)
+    pertanyaan_1 = "Min, sepatu sneakers yang harga 200rb ready gak? Terus dapet diskon lagi gak kalau beli 1 pasang?"
+    hasil_balasan_1 = proses_chat_masuk("081234567890", pertanyaan_1)
+    print(f"🤖 Bot WA Mengirim ke Pelanggan:\n{hasil_balasan_1}")
+    
+    print("-" * 50)
+    
+    # TEST CASE 2: Menguji Toko Budi Coffee (Sudah lewat 5 hari dari masa pendaftaran)
+    pertanyaan_2 = "Kopi susu gula arennya masih ada mas?"
+    hasil_balasan_2 = proses_chat_masuk("089999999999", pertanyaan_2)
+    print(f"🤖 Bot WA Mengirim ke Pelanggan:\n{hasil_balasan_2}")
+        
