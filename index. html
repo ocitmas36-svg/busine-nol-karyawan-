@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rosit AI - Solusi Bot WhatsApp CS UMKM</title>
+    <!-- Menggunakan Tailwind CSS untuk tampilan mewah lewat HP -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <!-- Header / Branding -->
+    <header class="text-center my-6">
+        <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
+            ROSIT AI SYSTEM
+        </h1>
+        <p class="text-gray-400 text-sm mt-1">Ubah WhatsApp Tokomu Jadi Asisten Penjualan Otomatis 24 Jam</p>
+    </header>
+
+    <main class="max-w-md mx-auto space-y-6">
+
+        <!-- KOTAK FORM PENDAFTARAN -->
+        <section class="bg-slate-800 p-6 rounded-2xl shadow-xl border border-slate-700">
+            <h2 class="text-xl font-bold text-cyan-400 mb-4 flex items-center gap-2">
+                📋 Pendaftaran Trial 5 Hari
+            </h2>
+            
+            <form id="formDaftar" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">NOMOR WA PEMILIK (UNTUK TAGIHAN)</label>
+                    <input type="tel" id="waPemilik" placeholder="Contoh: 08898094xxx" required
+                        class="w-full bg-slate-900 border border-slate-600 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-cyan-400 text-sm">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">NOMOR TARGET BOT WA TOKO</label>
+                    <input type="tel" id="waBot" placeholder="Contoh: 08123456xxx" required
+                        class="w-full bg-slate-900 border border-slate-600 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-cyan-400 text-sm">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">SOP / ATURAN BALASAN TOKO ANDA</label>
+                    <textarea id="sopToko" rows="4" placeholder="Contoh: Nama Toko Kopi Rosit. Buka jam 8 pagi. Kalau ditanya stok selalu jawab ready Kak..." required
+                        class="w-full bg-slate-900 border border-slate-600 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-cyan-400 text-sm"></textarea>
+                </div>
+
+                <button type="submit" 
+                    class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold py-3 rounded-xl transition duration-200 shadow-lg text-sm cursor-pointer">
+                    🚀 AKTIFKAN TRIAL 5 HARI SEKARANG
+                </button>
+            </form>
+        </section>
+
+        <!-- KOTAK SIMULASI UJI COBA LANGSUNG -->
+        <section class="bg-slate-800 p-6 rounded-2xl shadow-xl border border-slate-700">
+            <h2 class="text-xl font-bold text-amber-400 mb-2 flex items-center gap-2">
+                🧪 Lab Uji Coba Bot AI
+            </h2>
+            <p class="text-xs text-gray-400 mb-4">Setelah isi formulir di atas, simulasikan pertanyaan pelangganmu di bawah ini untuk tes kecerdasan AI.</p>
+
+            <div class="space-y-3">
+                <input type="text" id="chatSimulasi" placeholder="Ketik pertanyaan konsumen (misal: Buka jam berapa?)" 
+                    class="w-full bg-slate-900 border border-slate-600 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-400 text-sm">
+                
+                <button onclick="tesRobotAI()" 
+                    class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 rounded-xl transition duration-200 text-xs cursor-pointer">
+                    ⚡ TEST BALASAN ROBOT (QC DOUBLE AGEN)
+                </button>
+            </div>
+
+            <!-- Tempat memunculkan balasan AI -->
+            <div id="kotakHasil" class="hidden mt-4 p-4 bg-slate-900 border border-slate-700 rounded-xl">
+                <span class="text-[10px] font-bold text-emerald-400 tracking-wider block mb-1">🤖 BALASAN ROBOT CS (PASSED QC):</span>
+                <p id="teksBalasanAI" class="text-sm text-gray-300 italic">Sedang berpikir...</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center text-gray-500 text-[11px] mt-8">
+        &copy; 2026 Rosit Digital Product. All Rights Reserved.
+    </footer>
+
+    <script>
+        // Logika sederhana ketika tombol daftar diklik
+        document.getElementById('formDaftar').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const pemilik = document.getElementById('waPemilik').value;
+            const bot = document.getElementById('waBot').value;
+            
+            alert(`🎉 Pendaftaran Berhasil!\n\nNomor ${bot} terdaftar untuk Trial 5 Hari.\nSistem otomatis mengirim konfirmasi ke nomor pemilik (${pemilik}).`);
+            console.log("Data Klien Tersimpan di Memori Browser.");
+        });
+
+        // Simulasi tombol testing AI
+        function tesRobotAI() {
+            const tanya = document.getElementById('chatSimulasi').value;
+            const sop = document.getElementById('sopToko').value;
+            const kotak = document.getElementById('kotakHasil');
+            const teks = document.getElementById('teksBalasanAI');
+
+            if(!sop) {
+                alert("Isi dulu SOP Tokomu di formulir atas untuk dasar otak AI berpikir!");
+                return;
+            }
+            if(!tanya) {
+                alert("Ketik dulu pertanyaan pembeli yang mau diuji coba!");
+                return;
+            }
+
+            kotak.classList.remove('hidden');
+            teks.innerText = "⏳ Agen 1 sedang menyusun jawaban & Agen 2 sedang melakukan Koreksi QC...";
+
+            // Simulasi jeda AI berpikir 1.5 detik
+            setTimeout(() => {
+                teks.innerText = `[Simulasi Sukses] Berdasarkan SOP kamu, AI otomatis menjawab: "Halo Kak! Terima kasih sudah menghubungi kami. Terkait pertanyaan '${tanya}', toko kami siap melayani sesuai standar operasional terbaik kami. Ada yang bisa dibantu lagi?"`;
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
